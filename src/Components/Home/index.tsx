@@ -46,24 +46,18 @@ export function Home() {
   useEffect(() => {
     let interval: number
     if (activeCycle) {
-      interval = setInterval(() =>{
-        const secondsDifference - differenceInSeconds(
+      interval = setInterval(() => {
+        const secondsDifference = differenceInSeconds(
           new Date(),
           activeCycle.startDate,
         )
-        if(secondsDifference >= totalSeconds){
-          setCycles(
-            cycle.map(cycle=>{
-              if(cycle.id === activeCycleId){
-                return {...cycle,finichedDate:new Date()}
-              }else{
-                return cycle
-              }
-            })
-          )
-        }
         setAmountSecondsPassed(secondsDifference)
-  }, [activeCycle,totalSeconds]))
+      }, 1000)
+    }
+    return () => {
+      clearInterval(interval)
+    }
+  }, [activeCycle, totalSeconds])
   function handleInterruptCycle() {
     setCycles(
       cycles.map((cycle) => {
