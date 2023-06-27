@@ -51,6 +51,9 @@ export function Home() {
           new Date(),
           activeCycle.startDate,
         )
+        if(secondsDifference >= totalSeconds){
+          
+        }
         setAmountSecondsPassed(secondsDifference)
       }, 1000)
     }
