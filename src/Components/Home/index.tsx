@@ -51,19 +51,29 @@ export function Home() {
           new Date(),
           activeCycle.startDate,
         )
-        if(secondsDifference >= totalSeconds){
-          
+        if (secondsDifference >= totalSeconds) {
+          setCycles((state) =>
+            state.map((cycle) => {
+              if (cycle.id === activeCycleId) {
+                return { ...cycle, finishedDate: new Date() }
+              } else {
+                return cycle
+              }
+            }),
+          )
+          clearInterval(interval)
+        } else {
+          setAmountSecondsPassed(totalSeconds)
         }
-        setAmountSecondsPassed(secondsDifference)
       }, 1000)
     }
     return () => {
       clearInterval(interval)
     }
-  }, [activeCycle, totalSeconds])
+  }, [activeCycle, totalSeconds, activeCycleId])
   function handleInterruptCycle() {
-    setCycles(
-      cycles.map((cycle) => {
+    setCycles((state) =>
+      state.map((cycle) => {
         if (cycle.id === activeCycleId) {
           return { ...cycle, interrupedDate: new Date() }
         } else {
