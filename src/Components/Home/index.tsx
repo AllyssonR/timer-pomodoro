@@ -30,6 +30,7 @@ interface CycleContextType {
   activeCycleId: string | null
   markCurrentCycleAsFinished: () => void
   amountSecondsPassed: number
+  setSecondsPassed: (seconds: number) => void
 }
 export const CyclesContext = createContext({} as CycleContextType)
 const newCycleFormValidationSchema = zod.object({
@@ -91,6 +92,9 @@ export function Home() {
     setAmountSecondsPassed(0)
     reset()
   }
+  function setSecondsPassed(seconds: number) {
+    setAmountSecondsPassed(seconds)
+  }
   const task = watch('task')
   const isSubmitDisabled = !task
 
@@ -103,6 +107,7 @@ export function Home() {
             activeCycleId,
             markCurrentCycleAsFinished,
             amountSecondsPassed,
+            setSecondsPassed,
           }}
         >
           <FormProvider {...newCycleForm}>
