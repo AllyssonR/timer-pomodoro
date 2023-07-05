@@ -1,4 +1,5 @@
 import { HandPalm, Play } from 'phosphor-react'
+import { useForm, FormProvider } from 'react-hook-form'
 import {
   HomeContainer,
   StartCountDownButton,
@@ -6,8 +7,10 @@ import {
 } from './styles'
 
 import { createContext, useState } from 'react'
-import { NewCyclefrom } from './Components/NewCycleForm'
+import { NewCycleForm } from './Components/NewCycleForm'
 import { Countdown } from './Components/Countdown'
+import * as zod from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 interface Cycle {
   id: string
@@ -26,11 +29,31 @@ interface CycleContextType {
   activeCycle: Cycle | undefined
   activeCycleId: string | null
   markCurrentCycleAsFinished: () => void
+  amountSecondsPassed: number
 }
 export const CyclesContext = createContext({} as CycleContextType)
+const newCycleFormValidationSchema = zod.object({
+  task: zod.string().min(1, 'Informe a tarefa'),
+  minutesAmount: zod
+    .number()
+    .min(5, 'O Ciclo precisa ser no minimo 5 minutos')
+    .max(60, 'O intervalo precisa ser no máximo 60 minutos'),
+})
+type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>
+// eslint-disable-next-line react-hooks/rules-of-hooks
+const newCycleForm = useForm<NewCycleFormData>({
+  resolver: zodResolver(newCycleFormValidationSchema),
+  defaultValues: {
+    task: '',
+    minutesAmount: 0,
+  },
+})
+const { handleSubmit, watch, reset } = newCycleForm
+
 export function Home() {
   const [cycles, setCycles] = useState<Cycle[]>([])
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
+  const [amountSecondsPassed, setAmountSecondsPassed] = useState(0)
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
   function markCurrentCycleAsFinished() {
@@ -75,9 +98,16 @@ export function Home() {
     <HomeContainer>
       <form action="" onSubmit={handleSubmit(handleCreateNewCycle)}>
         <CyclesContext.Provider
-          value={{ activeCycle, activeCycleId, markCurrentCycleAsFinished }}
+          value={{
+            activeCycle,
+            activeCycleId,
+            markCurrentCycleAsFinished,
+            amountSecondsPassed,
+          }}
         >
-          <NewCyclefrom />
+          <FormProvider {...newCycleForm}>
+            <NewCycleForm />
+          </FormProvider>
           <Countdown />
         </CyclesContext.Provider>
         {activeCycle ? (
