@@ -34,17 +34,20 @@ const newCycleForm = useForm<NewCycleFormData>({
     minutesAmount: 0,
   },
 })
-const { handleSubmit, watch } = newCycleForm
+const { handleSubmit, watch, reset } = newCycleForm
 
 export function Home() {
   const task = watch('task')
   const isSubmitDisabled = !task
   const { CreateNewCycle, InterruptCurrnetCycle, activeCycle } =
     useContext(CyclesContext)
-
+  function handleCreateNewCycle(data: NewCycleFormData) {
+    CreateNewCycle(data)
+    reset()
+  }
   return (
     <HomeContainer>
-      <form action="" onSubmit={handleSubmit(CreateNewCycle)}>
+      <form action="" onSubmit={handleSubmit(handleCreateNewCycle)}>
         <FormProvider {...newCycleForm}>
           <NewCycleForm />
         </FormProvider>
