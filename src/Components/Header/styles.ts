@@ -1,4 +1,5 @@
-import styled from 'styled-components'
+import { styled } from 'styled-components'
+
 export const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
@@ -15,10 +16,10 @@ export const HeaderContainer = styled.header`
       color: ${(props) => props.theme['gray-100']};
       border-top: 3px solid transparent;
       border-bottom: 3px solid transparent;
-      &:hover {
+      :hover {
         border-bottom: 3px solid ${(props) => props.theme['green-500']};
       }
-      &.active {
+      :active {
         color: ${(props) => props.theme['green-500']};
       }
     }
